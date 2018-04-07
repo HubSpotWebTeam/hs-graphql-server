@@ -11,7 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hs-web-team/hs-api": "^1.1.6",
+    "@hs-web-team/hs-api": "*",
+    "debug": "^3.1.0",
     "dotenv": "^5.0.1",
     "graphql-yoga": "^1.8.0",
     "moment": "^2.22.0",
