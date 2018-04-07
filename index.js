@@ -9,7 +9,7 @@ const { PORT: port } = process.env;
 let idCount = 0;
 
 const assertHasCredentials = ctx => {
-  if (!ctx.hapikey && !ctx.accessToken) {
+  if (!ctx.hs) {
     throw new Error('Credentials are required');
   }
 };
@@ -20,6 +20,13 @@ const context = async ({ request }) => {
     timestamp: moment()
   };
   Object.assign(ctx, request.query);
+
+  const { hapikey } = request.query;
+  // const { authorization } = request.headers;
+  if (hapikey) {
+    const hs = new HubspotAPI({ hapikey });
+    Object.assign(ctx, { hs });
+  }
   // TODO: Extract authorization header here
   return ctx;
 };
@@ -34,16 +41,18 @@ const resolvers = {
     blogPost: async (_, opts, context) => {
       const { id } = opts;
       assertHasCredentials(context);
-      const { hapikey } = context;
-      const hs = new HubspotAPI({ hapikey });
+      const { hs } = context;
       const response = await hs.blog.getPostById(id);
-      // console.log(response);
       return response;
     },
-    blogPosts: (_, opts, context) => {
+    blogPosts: async (_, opts, context) => {
+      const { contentGroupId: content_group_id } = opts;
       assertHasCredentials(context);
-      console.log(context);
-      return [{}];
+      const { hs } = context;
+      const response = await hs.blog.getPosts({ content_group_id });
+      const { objects } = response;
+      return objects;
+      // return [{}];
     }
   }
 };
