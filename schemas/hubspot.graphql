@@ -1,0 +1,12 @@
+type Query {
+  blogPosts(contentGroupId: ID!): [BlogPost!]!
+  blogPost(id: ID!): BlogPost
+  version: String!
+}
+
+type BlogPost {
+  id: ID!
+  title: String!
+  post_body: String!
+  published: Boolean!
+}
