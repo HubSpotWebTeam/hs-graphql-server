@@ -3,7 +3,7 @@ type Query {
   blogPost(id: ID!): BlogPost
   blogAuthor(id: ID!): BlogAuthor
   blogAuthors(limit: Int!): [BlogAuthor!]!
-  contact(id: ID!): Contact
+  contact(id: ID, email: String, utk: String): Contact
   contacts(count: Int!): [Contact!]!
   version: String!
 }
@@ -19,6 +19,7 @@ type Contact {
   vid: ID!
   firstname: String
   lastname: String
+  email: String
 }
 
 type BlogAuthor {

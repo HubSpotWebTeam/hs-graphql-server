@@ -13,6 +13,12 @@ const flattenProps = properties =>
     return acc;
   }, {});
 
+const contactsResponse = contact => {
+  const { vid, properties } = contact;
+  debug(properties);
+  return Object.assign({ vid }, flattenProps(properties));
+};
+
 module.exports = {
   version: (_, opts, context) => {
     assertHasCredentials(context);
@@ -21,19 +27,30 @@ module.exports = {
   contacts: async (_, opts, context) => {
     assertHasCredentials(context);
     const { hs } = context;
+    // Define extra properties as required by the schema
+    Object.assign(opts, { property: ['email', 'firstname', 'lastname'] });
     const response = await hs.contacts.getContacts(opts);
     const { contacts } = response;
-    return contacts.map(contact => {
-      const { vid, properties } = contact;
-      return Object.assign({ vid }, flattenProps(properties));
-    });
+    return contacts.map(contactsResponse);
   },
   contact: async (_, opts, context) => {
     assertHasCredentials(context);
     const { hs } = context;
-    const response = await hs.contacts.getById(opts.id);
+    const { id, email, utk } = opts;
+    let response;
+    if (id) {
+      response = await hs.contacts.getById(id);
+    } else if (email) {
+      response = await hs.contacts.getByEmail(email);
+    } else if (utk) {
+      response = await hs.contacts.getByUtk(utk);
+    } else {
+      throw new Error(
+        'You must specify one of `id`, `email`, `utk` in your query'
+      );
+    }
     const { vid, properties } = response;
-    return Object.assign({ vid }, flattenProps(properties));
+    return contactsResponse(response);
   },
   blogAuthor: async (_, opts, context) => {
     assertHasCredentials(context);
