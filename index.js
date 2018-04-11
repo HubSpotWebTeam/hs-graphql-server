@@ -3,7 +3,7 @@ const qs = require('querystring');
 const { GraphQLServer } = require('graphql-yoga');
 const Query = require('./query-resolvers');
 const context = require('./context');
-const typeDefs = './schemas/hubspot.graphql';
+const typeDefs = require('./schemas/hubspot.graphql').typeDefs;
 
 const { PORT: port } = process.env;
 

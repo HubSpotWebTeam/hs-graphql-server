@@ -19,6 +19,11 @@ const contactsResponse = contact => {
   return Object.assign({ vid }, flattenProps(properties));
 };
 
+const companiesResponse = company => {
+  const { portalId, properties, additionalDomains } = company;
+  return Object.assign({ portalId, properties }, flattenProps(properties));
+};
+
 module.exports = {
   version: (_, opts, context) => {
     assertHasCredentials(context);
@@ -28,7 +33,8 @@ module.exports = {
     assertHasCredentials(context);
     const { hs } = context;
     // Define extra properties as required by the schema
-    Object.assign(opts, { property: ['email', 'firstname', 'lastname'] });
+    const property = ['email', 'firstname', 'lastname', 'company'];
+    Object.assign(opts, { property });
     const response = await hs.contacts.getContacts(opts);
     const { contacts } = response;
     return contacts.map(contactsResponse);
@@ -72,10 +78,19 @@ module.exports = {
     return response;
   },
   blogPosts: async (_, opts, context) => {
-    const { contentGroupId: content_group_id } = opts;
+    const {
+      contentGroupId: content_group_id,
+      blogAuthorId: blog_author_id,
+      limit
+    } = opts;
+
     assertHasCredentials(context);
     const { hs } = context;
-    const response = await hs.blog.getPosts({ content_group_id });
+    const response = await hs.blog.getPosts({
+      content_group_id,
+      blog_author_id,
+      limit
+    });
     const { objects } = response;
     return objects;
   }

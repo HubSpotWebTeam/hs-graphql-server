@@ -1,6 +1,6 @@
 {
   "name": "hubspot-graphql",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hs-web-team/hs-api": "^1.1.9",
+    "@hs-web-team/hs-api": "^1.2.6",
+    "babel-runtime": "^6.26.0",
     "debug": "^3.1.0",
     "dotenv": "^5.0.1",
     "graphql-yoga": "^1.8.0",
