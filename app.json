@@ -2,7 +2,7 @@
   "name": "HubSpot GraphQL Server",
   "description":
     "A deployable GraphQL Server which uses the HubSpot REST API as a data source",
-  "repository": "https://github.com/hubspotwebteam/hubspot-graphql",
+  "repository": "https://github.com/HubSpotWebTeam/hs-graphql-server",
   "logo": "https://node-js-sample.herokuapp.com/node.png",
   "keywords": ["node", "graphql", "hubspot"]
 }
