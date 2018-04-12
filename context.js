@@ -1,5 +1,5 @@
 const moment = require('moment');
-const HubspotAPI = require('@hs-web-team/hs-api');
+const HubspotAPI = require('hs-api');
 
 module.exports = async ({ request }) => {
   const ctx = {
