@@ -71,6 +71,21 @@ module.exports = {
     const { objects } = response;
     return objects;
   },
+  page: async (_, opts, context, { cacheControl }) => {
+    assertHasCredentials(context);
+    cacheControl.setCacheHint({ maxAge: 3600 });
+    const { hs } = context;
+    const response = await hs.pages.getPageById(opts.id);
+    return response;
+  },
+  pages: async (_, opts, context, { cacheControl }) => {
+    assertHasCredentials(context);
+    cacheControl.setCacheHint({ maxAge: 3600 });
+    const { hs } = context;
+    const response = await hs.pages.getPages(opts);
+    const { objects } = response;
+    return objects;
+  },
   blogPost: async (_, opts, context) => {
     assertHasCredentials(context);
     const { hs } = context;
