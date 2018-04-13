@@ -3,7 +3,7 @@ const HubspotAPI = require('hs-api');
 
 module.exports = async ({ request }) => {
   const ctx = {
-    timestamp: moment()
+    timestamp: moment().valueOf()
   };
   Object.assign(ctx, request.query);
 
@@ -14,7 +14,7 @@ module.exports = async ({ request }) => {
     Object.assign(ctx, { hs });
   } else if (authorization) {
     // Access Token passed as header in the format:
-    /* 
+    /*
       { 'Authorization': 'Bearer {accessToken}' }
     */
     const accessToken = authorization.slice(7);

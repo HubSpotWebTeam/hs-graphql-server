@@ -69,6 +69,10 @@ const queryFields = [
   },
   {
     method: 'pages',
+    arguments: {
+      offset: 'Int',
+      limit: 'Int!'
+    },
     returns: '[Page!]!'
   },
   {
@@ -151,7 +155,7 @@ module.exports = {
       ${queryFields.map(extractQueryMethod).join('\r\n')}
     }
 
-    type Page @cacheControl(maxAge: 240) {
+    type Page {
       ${typeDefProps.page}
     }
 

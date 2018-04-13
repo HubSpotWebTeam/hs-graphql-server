@@ -15,7 +15,6 @@ const flattenProps = properties =>
 
 const contactsResponse = contact => {
   const { vid, properties } = contact;
-  debug(properties);
   return Object.assign({ vid }, flattenProps(properties));
 };
 
@@ -26,7 +25,6 @@ const companiesResponse = company => {
 
 module.exports = {
   version: (_, opts, context) => {
-    assertHasCredentials(context);
     return pjs.version;
   },
   contacts: async (_, opts, context) => {
@@ -73,14 +71,12 @@ module.exports = {
   },
   page: async (_, opts, context, { cacheControl }) => {
     assertHasCredentials(context);
-    cacheControl.setCacheHint({ maxAge: 3600 });
     const { hs } = context;
     const response = await hs.pages.getPageById(opts.id);
     return response;
   },
   pages: async (_, opts, context, { cacheControl }) => {
     assertHasCredentials(context);
-    cacheControl.setCacheHint({ maxAge: 3600 });
     const { hs } = context;
     const response = await hs.pages.getPages(opts);
     const { objects } = response;

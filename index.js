@@ -6,8 +6,12 @@ const Query = require('./query-resolvers');
 const context = require('./context');
 const typeDefs = require('./schemas/hubspot.graphql').typeDefs;
 const debug = require('debug')('hubspot-gql');
+const pjs = require('./package.json');
+const semver = require('semver');
 
-const { PORT: port } = process.env;
+const version = `v${semver.major(pjs.version)}`;
+
+const { PORT: port, NODE_ENV } = process.env;
 
 // UnparsedObject is a base JSON object, and you should avoid using it if you can be
 // prescriptive about your schema.
@@ -18,6 +22,13 @@ const server = new GraphQLServer({
   context
 });
 
-server.start({ port, tracing: true, cacheControl: true }, ({ port }) =>
-  debug(`Server started, listening on port ${port} for incoming requests.`)
+server.start(
+  {
+    port,
+    endpoint: `/api/${version}`,
+    tracing: NODE_ENV === 'development',
+    cacheControl: true
+  },
+  ({ port }) =>
+    debug(`Server started, listening on port ${port} for incoming requests.`)
 );
