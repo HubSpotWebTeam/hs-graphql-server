@@ -56,6 +56,37 @@ let typeDefProps = {
     updated: 'Int',
     username: 'String',
     website: 'String'
+  },
+  workflow: {
+    id: 'ID',
+    name: 'String',
+    type: 'String',
+    name: 'String',
+    actions: 'UnparsedObject',
+    id: 'Int',
+    description: 'String',
+    enabled: 'Boolean',
+    portalId: 'Int',
+    isSegmentBased: 'Boolean',
+    listening: 'Boolean',
+    nurtureTimeRange: 'UnparsedObject',
+    onlyExecOnBizDays: 'Boolean',
+    insertedAt: 'Int',
+    updatedAt: 'Int',
+    recurringSetting: 'UnparsedObject',
+    enrollOnCriteriaUpdate: 'Boolean',
+    onlyEnrollsManually: 'Boolean',
+    creationSource: 'UnparsedObject',
+    updateSource: 'UnparsedObject',
+    allowContactToTriggerMultipleTimes: 'Boolean',
+    unenrollmentSetting: 'UnparsedObject',
+    segmentCriteria: 'UnparsedObject',
+    goalCriteria: 'UnparsedObject',
+    reEnrollmentTriggerSets: 'UnparsedObject',
+    triggerSets: 'UnparsedObject',
+    suppressionListIds: 'UnparsedObject',
+    lastUpdatedBy: 'String',
+    metaData: 'UnparsedObject'
   }
 };
 
@@ -66,16 +97,14 @@ const queryFields = [
       id: 'ID!'
     },
     returns: 'Page!'
-  },
-  {
+  }, {
     method: 'pages',
     arguments: {
       offset: 'Int',
       limit: 'Int!'
     },
     returns: '[Page!]!'
-  },
-  {
+  }, {
     method: 'blogPosts',
     arguments: {
       contentGroupId: 'ID!',
@@ -83,27 +112,28 @@ const queryFields = [
       limit: 'Int!'
     },
     returns: '[BlogPost!]!'
-  },
-  {
+  }, {
     method: 'blogPost',
-    arguments: { id: 'ID!' },
+    arguments: {
+      id: 'ID!'
+    },
     returns: 'BlogPost'
-  },
-  {
+  }, {
     method: 'blogAuthor',
-    arguments: { id: 'ID!' },
+    arguments: {
+      id: 'ID!'
+    },
     returns: 'BlogAuthor'
-  },
-  {
+  }, {
     method: 'blogAuthors',
-    arguments: { limit: 'Int!' },
+    arguments: {
+      limit: 'Int!'
+    },
     returns: '[BlogAuthor!]!'
-  },
-  {
+  }, {
     method: 'version',
     returns: 'String!'
-  },
-  {
+  }, {
     method: 'contact',
     arguments: {
       id: 'ID',
@@ -111,22 +141,28 @@ const queryFields = [
       utk: 'String'
     },
     returns: 'Contact'
-  },
-  {
+  }, {
     method: 'contacts',
     arguments: {
       count: 'Int!'
     },
     returns: '[Contact!]!'
+  }, {
+    method: 'workflow',
+    arguments: {
+      id: 'ID!'
+    },
+    returns: 'Workflow'
+  }, {
+    method: 'workflows',
+    returns: '[Workflow]'
   }
 ];
 
 const extractQueryMethod = qf => {
   // blogPosts(contentGroupId: ID!, blogAuthorId: Int, limit: Int!): [BlogPost!]!
   if (qf.arguments) {
-    const argumentMap = Object.keys(qf.arguments)
-      .map(arg => `${arg}: ${qf.arguments[arg]}`)
-      .join(', ');
+    const argumentMap = Object.keys(qf.arguments).map(arg => `${arg}: ${qf.arguments[arg]}`).join(', ');
     return `${qf.method}(${argumentMap}): ${qf.returns}`;
   }
   return `${qf.method}: ${qf.returns}`;
@@ -138,9 +174,7 @@ const blogAuthorFields = Object.keys(typeDefProps.blogAuthor);
 
 Object.keys(typeDefProps).forEach(typeDef => {
   Object.assign(typeDefProps, {
-    [typeDef]: Object.keys(typeDefProps[typeDef])
-      .map(prop => `\t${prop}: ${typeDefProps[typeDef][prop]}`)
-      .join('\r\n')
+    [typeDef]: Object.keys(typeDefProps[typeDef]).map(prop => `\t${prop}: ${typeDefProps[typeDef][prop]}`).join('\r\n')
   });
 });
 
@@ -169,6 +203,10 @@ module.exports = {
 
     type BlogAuthor {
       ${typeDefProps.blogAuthor}
+    }
+
+    type Workflow {
+      ${typeDefProps.workflow}
     }
   `
 };
