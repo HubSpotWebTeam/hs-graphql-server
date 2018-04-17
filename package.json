@@ -17,7 +17,7 @@
     "graphql-tools": "^2.24.0",
     "graphql-type-json": "^0.2.0",
     "graphql-yoga": "^1.8.0",
-    "hs-api": "^1.4.0",
+    "hubspot-api": "^1.0.1",
     "moment": "^2.22.0",
     "nodemon": "^1.17.3"
   }
