@@ -7,44 +7,49 @@ const assertHasCredentials = ctx => {
   }
 };
 
-const flattenProps = properties => Object.keys(properties).reduce((acc, curr) => {
-  acc[curr] = properties[curr].value;
-  return acc;
-}, {});
+const flattenProps = properties =>
+  Object.keys(properties).reduce((acc, curr) => {
+    acc[curr] = properties[curr].value;
+    return acc;
+  }, {});
 
 const contactsResponse = contact => {
-  const {vid, properties} = contact;
-  return Object.assign({
-    vid
-  }, flattenProps(properties));
+  const { vid, properties } = contact;
+  return Object.assign(
+    {
+      vid,
+    },
+    flattenProps(properties),
+  );
 };
 
 const companiesResponse = company => {
-  const {portalId, properties, additionalDomains} = company;
-  return Object.assign({
-    portalId,
-    properties
-  }, flattenProps(properties));
+  const { portalId, properties, additionalDomains } = company;
+  return Object.assign(
+    {
+      portalId,
+      properties,
+    },
+    flattenProps(properties),
+  );
 };
 
 module.exports = {
-  version: (_, opts, context) => {
-    return pjs.version;
-  },
+  version: (_, opts, context) => pjs.version,
   contacts: async (_, opts, context) => {
     assertHasCredentials(context);
-    const {hs} = context;
+    const { hs } = context;
     // Define extra properties as required by the schema
     const property = ['email', 'firstname', 'lastname', 'company'];
-    Object.assign(opts, {property});
+    Object.assign(opts, { property });
     const response = await hs.contacts.getContacts(opts);
-    const {contacts} = response;
+    const { contacts } = response;
     return contacts.map(contactsResponse);
   },
   contact: async (_, opts, context) => {
     assertHasCredentials(context);
-    const {hs} = context;
-    const {id, email, utk} = opts;
+    const { hs } = context;
+    const { id, email, utk } = opts;
     let response;
     if (id) {
       response = await hs.contacts.getById(id);
@@ -55,55 +60,73 @@ module.exports = {
     } else {
       throw new Error('You must specify one of `id`, `email`, `utk` in your query');
     }
-    const {vid, properties} = response;
+    const { vid, properties } = response;
     return contactsResponse(response);
   },
   blogAuthor: async (_, opts, context) => {
     assertHasCredentials(context);
-    const {hs} = context;
+    const { hs } = context;
     const response = await hs.blog.getAuthor(opts.id);
     return response;
   },
   blogAuthors: async (_, opts, context) => {
     assertHasCredentials(context);
-    const {hs} = context;
+    const { hs } = context;
     const response = await hs.blog.getAuthors(opts);
-    const {objects} = response;
+    const { objects } = response;
     return objects;
   },
-  page: async (_, opts, context, {cacheControl}) => {
+  page: async (_, opts, context, { cacheControl }) => {
     assertHasCredentials(context);
-    const {hs} = context;
+    const { hs } = context;
     const response = await hs.pages.getPageById(opts.id);
     return response;
   },
-  pages: async (_, opts, context, {cacheControl}) => {
+  pages: async (_, opts, context, { cacheControl }) => {
     assertHasCredentials(context);
-    const {hs} = context;
+    const { hs } = context;
     const response = await hs.pages.getPages(opts);
-    const {objects} = response;
+    const { objects } = response;
+    return objects;
+  },
+  tables: async (_, opts, context, { cacheControl }) => {
+    assertHasCredentials(context);
+    const { hs } = context;
+    const response = await hs.hubdb.getTables(opts);
+    const { objects } = response;
+    return objects;
+  },
+  rows: async (_, opts, context, { cacheControl }) => {
+    assertHasCredentials(context);
+    const { hs } = context;
+    const response = await hs.hubdb.getTableRows(opts.tableId, opts.portalId);
+    const { objects } = response;
     return objects;
   },
   blogPost: async (_, opts, context) => {
     assertHasCredentials(context);
-    const {hs} = context;
+    const { hs } = context;
     const response = await hs.blog.getPostById(opts);
     return response;
   },
   blogPosts: async (_, opts, context) => {
-    const {contentGroupId: content_group_id, blogAuthorId: blog_author_id, limit} = opts;
+    const { contentGroupId: content_group_id, blogAuthorId: blog_author_id, limit } = opts;
 
     assertHasCredentials(context);
-    const {hs} = context;
-    const response = await hs.blog.getPosts({content_group_id, blog_author_id, limit});
-    const {objects} = response;
+    const { hs } = context;
+    const response = await hs.blog.getPosts({
+      content_group_id,
+      blog_author_id,
+      limit,
+    });
+    const { objects } = response;
     return objects;
   },
   workflows: async (_, opts, context) => {
     assertHasCredentials(context);
-    const {hs} = context;
+    const { hs } = context;
     const response = await hs.workflows.getAll();
-    const {workflows} = response;
+    const { workflows } = response;
 
     // Filtering (as this is not provided by the API)
 
@@ -111,9 +134,17 @@ module.exports = {
   },
   workflow: async (_, opts, context) => {
     assertHasCredentials(context);
-    const {hs} = context;
+    const { hs } = context;
     const response = await hs.workflows.getWorkflow(opts.id);
     debug(response);
     return response;
-  }
+  },
+  // table: async (_, opts, context) => {
+  //   assertHasCredentials(context);
+  //   const { hs } = context;
+  //   const response = await hs.hubdb.getTableById(opts.tableId, opts.portalId);
+  //   console.log(response);
+  //   debug(response);
+  //   return response;
+  // }
 };
