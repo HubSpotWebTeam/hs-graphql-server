@@ -15,12 +15,7 @@ const flattenProps = properties =>
 
 const contactsResponse = contact => {
   const { vid, properties } = contact;
-  return Object.assign(
-    {
-      vid,
-    },
-    flattenProps(properties),
-  );
+  return Object.assign({ vid }, flattenProps(properties));
 };
 
 const companiesResponse = company => {
@@ -139,12 +134,4 @@ module.exports = {
     debug(response);
     return response;
   },
-  // table: async (_, opts, context) => {
-  //   assertHasCredentials(context);
-  //   const { hs } = context;
-  //   const response = await hs.hubdb.getTableById(opts.tableId, opts.portalId);
-  //   console.log(response);
-  //   debug(response);
-  //   return response;
-  // }
 };
